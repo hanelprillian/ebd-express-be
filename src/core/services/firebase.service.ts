@@ -1,4 +1,16 @@
-import { db } from "@/config/firebase";
+import * as admin from 'firebase-admin';
+import { FIREBASE_PROJECT_ID } from '@/config/const';
+import serviceAccount from '@/config/firebase.json';
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount as any),
+    projectId: FIREBASE_PROJECT_ID
+  });
+}
+
+export const db = admin.firestore();
+export const auth = admin.auth();
 
 export interface IFirestoreService<T> {
   add(data: Omit<T, "id">): Promise<string>;
